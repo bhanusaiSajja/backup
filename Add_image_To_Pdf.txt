@@ -1,0 +1,32 @@
+using PdfSharp.Pdf;
+using PdfSharp.Drawing;
+using System.IO;
+
+class Program
+{
+    static void Main()
+    {
+        string inputPdf = @"C:\Users\hp\Downloads\fw4.pdf";
+        string outputPdf = @"C:\Users\hp\Downloads\output_with_logo.pdf";
+        string logoPath = @"C:\Users\hp\Downloads\KIMS (1).png";
+
+        // Load existing PDF
+        PdfDocument document = PdfSharp.Pdf.IO.PdfReader.Open(inputPdf, PdfSharp.Pdf.IO.PdfDocumentOpenMode.Modify);
+
+        // Load logo image
+        XImage logo = XImage.FromFile(logoPath);
+
+        foreach (PdfPage page in document.Pages)
+        {
+            XGraphics gfx = XGraphics.FromPdfPage(page, XGraphicsPdfPageOptions.Append);
+
+            // Position logo at top center
+            double x = 5;
+            double y = 30; // margin from top
+
+            gfx.DrawImage(logo, x, y, 600, 70); // width=120, height=60
+        }
+
+        document.Save(outputPdf);
+    }
+}
